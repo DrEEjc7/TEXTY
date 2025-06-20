@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEXTY - Text Processor Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #000000;
+            --text-secondary: #495057;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --accent-color: #000000;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --error-color: #dc3545;
+        }
+
+        [data-theme="dark"] {
+            /* Dark mode colors */
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #adb5bd;
+            --text-muted: #6c757d;
+            --border-color: #495057;
+            --accent-color: #ffffff;
+            --success-color: #20c997;
+            --warning-color: #ffc107;
+            --error-color: #e74c3c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            font-weight: 500;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.1s ease;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2fr 300px;
+            gap: 40px;
+        }
+
+        .tools-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .tool-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .stats-panel {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tool-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 220px;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+            resize: vertical;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: border-color 0.1s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--text-primary);
+        }
+
+        textarea::placeholder {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.1s ease;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        .btn-case {
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 800;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: 800;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+
+        .input-group select,
+        .input-group input {
+            padding: 6px 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .input-group select:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--text-primary);
+        }
+
+        .case-converter-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .case-converter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .stats-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .stat-label {
+            font-weight: 700;
+            color: var(--text-secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-weight: 900;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .social-limits, .keywords-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .social-limit {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .social-limit-bar {
+            width: 80px;
+            height: 3px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .social-limit-fill {
+            height: 100%;
+            background: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .social-limit-fill.over-limit {
+            background: var(--error-color);
+        }
+
+        .keywords-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .keyword-tag {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .copy-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            transform: translateX(100%);
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+
+        .copy-feedback.show {
+            transform: translateX(0);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 2px solid var(--border-color);
+            margin-top: 40px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .footer a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-panel {
+                position: static;
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .tool-card {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .case-converter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .theme-toggle {
+                position: static;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Ultra-clean focus states */
+        *:focus {
+            outline: 2px solid var(--text-primary);
+            outline-offset: 2px;
+        }
+
+        /* Remove all transform animations for ultra-streamlined feel */
+        * {
+            transform: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">●</span> <span id="theme-text">Dark</span>
+            </button>
+            <h1>TEXTY</h1>
+            <p>Format • Generate • Analyze — The only text tool you'll ever need</p>
+        </div>
+        
+        <div class="main-layout">
+            <div class="tools-section">
+                <!-- Text Formatter + Case Converter -->
+                <div class="tool-card">
+                    <h2 class="tool-title">
+                        <span class="tool-icon">✂</span>
+                        Text Formatter
+                    </h2>
+                    <p class="tool-description">Strip formatting from any source. Convert between 8 different text cases instantly. Auto-formats text while preserving line breaks and paragraphs.</p>
+                    <textarea id="textInput" placeholder="Paste your text here..." oninput="updateStats()" autocomplete="off" spellcheck="false"></textarea>
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="stripFormatting()">Strip Formatting</button>
+                        <button onclick="autoFormat()">Auto Format</button>
+                        <button onclick="copyToClipboard('textInput')">Copy</button>
+                        <button onclick="clearText('textInput')">Clear</button>
+                    </div>
+                    
+                    <div class="case-converter-section">
+                        <h3 style="font-size: 13px; font-weight: 900; margin-bottom: 8px; color: var(--text-primary);">CASE CONVERTER</h3>
+                        <div class="case-converter-grid">
+                            <button class="btn-case" onclick="convertCase('upper')">UPPER</button>
+                            <button class="btn-case" onclick="convertCase('lower')">lower</button>
+                            <button class="btn-case" onclick="convertCase('title')">Title</button>
+                            <button class="btn-case" onclick="convertCase('sentence')">Sentence</button>
+                            <button class="btn-case" onclick="convertCase('camel')">camelCase</button>
+                            <button class="btn-case" onclick="convertCase('pascal')">PascalCase</button>
+                            <button class="btn-case" onclick="convertCase('snake')">snake_case</button>
+                            <button class="btn-case" onclick="convertCase('kebab')">kebab-case</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lorem Generator -->
+                <div class="tool-card">
+                    <h2 class="tool-title">
+                        <span class="tool-icon">📝</span>
+                        Lorem Generator
+                    </h2>
+                    <p class="tool-description">Generate professional placeholder text. Choose from 4 styles and 3 formats.</p>
+                    
+                    <div class="input-group">
+                        <label for="loremType">TYPE</label>
+                        <select id="loremType">
+                            <option value="paragraphs">Paragraphs</option>
+                            <option value="sentences">Sentences</option>
+                            <option value="words">Words</option>
+                        </select>
+                        
+                        <label for="loremCount">COUNT</label>
+                        <input type="number" id="loremCount" value="3" min="1" max="50">
+                        
+                        <label for="loremStyle">STYLE</label>
+                        <select id="loremStyle">
+                            <option value="latin">Latin</option>
+                            <option value="english" selected>English</option>
+                            <option value="tech">Tech</option>
+                            <option value="business">Business</option>
+                        </select>
+                    </div>
+                    
+                    <textarea id="loremOutput" placeholder="Generated text appears here..." readonly></textarea>
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="generateLorem()">Generate</button>
+                        <button onclick="copyToClipboard('loremOutput')">Copy</button>
+                        <button onclick="clearText('loremOutput')">Clear</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Stats Panel -->
+            <div class="stats-panel">
+                <h3 class="stats-title">
+                    <span class="tool-icon">📊</span>
+                    Live Analysis
+                </h3>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Words</span>
+                        <span class="stat-value" id="wordCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Characters</span>
+                        <span class="stat-value" id="charCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">No Spaces</span>
+                        <span class="stat-value" id="charCountNoSpaces">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Sentences</span>
+                        <span class="stat-value" id="sentenceCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Paragraphs</span>
+                        <span class="stat-value" id="paragraphCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Read Time</span>
+                        <span class="stat-value" id="readingTime">0m</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Readability</span>
+                        <span class="stat-value" id="readabilityScore">—</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Grade</span>
+                        <span class="stat-value" id="gradeLevel">—</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Avg/Sentence</span>
+                        <span class="stat-value" id="avgWordsPerSentence">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Language</span>
+                        <span class="stat-value" id="detectedLanguage">EN</span>
+                    </div>
+                </div>
+
+                <div class="social-limits">
+                    <h4 class="section-title">Social Limits</h4>
+                    <div class="social-limit">
+                        <span>TWITTER</span>
+                        <div class="social-limit-bar">
+                            <div class="social-limit-fill" id="twitterBar"></div>
+                        </div>
+                        <span id="twitterCount">0/280</span>
+                    </div>
+                    <div class="social-limit">
+                        <span>LINKEDIN</span>
+                        <div class="social-limit-bar">
+                            <div class="social-limit-fill" id="linkedinBar"></div>
+                        </div>
+                        <span id="linkedinCount">0/3000</span>
+                    </div>
+                    <div class="social-limit">
+                        <span>INSTAGRAM</span>
+                        <div class="social-limit-bar">
+                            <div class="social-limit-fill" id="instagramBar"></div>
+                        </div>
+                        <span id="instagramCount">0/2200</span>
+                    </div>
+                </div>
+
+                <div class="keywords-section">
+                    <h4 class="section-title">Keywords</h4>
+                    <div class="keywords-list" id="keywordsList">
+                        <span class="keyword-tag">NONE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="copyFeedback" class="copy-feedback">COPIED ✓</div>
+
+    <div class="footer">
+        <p><strong>Copyright © <span id="currentYear"></span> • Designed with ❤️ by <a href="https://www.dee7studio.com" target="_blank">Dee7 Studio</a></strong></p>
+    </div>
+
+    <script>
+        // Theme management
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeToggle();
+        }
+
+        function updateThemeToggle() {
+            const theme = document.documentElement.getAttribute('data-theme');
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+            if (theme === 'dark') {
+                icon.textContent = '○';
+                text.textContent = 'Light';
+            } else {
+                icon.textContent = '●';
+                text.textContent = 'Dark';
+            }
+        }
+
+        // Initialize theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeToggle();
+
+        // Core functionality
+        function updateStats() {
+            const text = document.getElementById('textInput').value;
+            
+            if (!text.trim()) {
+                resetStats();
+                return;
+            }
+
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            const characters = text.length;
+            const charactersNoSpaces = text.replace(/\s/g, '').length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            const readingTimeMinutes = Math.ceil(words.length / 200);
+            const avgWordsPerSentence = words.length / Math.max(sentences.length, 1);
+            const avgSyllablesPerWord = calculateAvgSyllables(words);
+            const fleschScore = 206.835 - (1.015 * avgWordsPerSentence) - (84.6 * avgSyllablesPerWord);
+            const gradeLevel = getGradeLevel(fleschScore);
+            const detectedLang = detectLanguage(text);
+
+            document.getElementById('wordCount').textContent = words.length;
+            document.getElementById('charCount').textContent = characters;
+            document.getElementById('charCountNoSpaces').textContent = charactersNoSpaces;
+            document.getElementById('sentenceCount').textContent = sentences.length;
+            document.getElementById('paragraphCount').textContent = paragraphs.length;
+            document.getElementById('readingTime').textContent = `${readingTimeMinutes}m`;
+            document.getElementById('readabilityScore').textContent = Math.round(fleschScore);
+            document.getElementById('gradeLevel').textContent = gradeLevel;
+            document.getElementById('avgWordsPerSentence').textContent = Math.round(avgWordsPerSentence * 10) / 10;
+            document.getElementById('detectedLanguage').textContent = detectedLang;
+
+            updateSocialLimits(characters);
+            updateKeywords(words);
+        }
+
+        function resetStats() {
+            ['wordCount', 'charCount', 'charCountNoSpaces', 'sentenceCount', 'paragraphCount', 'avgWordsPerSentence'].forEach(id => {
+                document.getElementById(id).textContent = '0';
+            });
+            document.getElementById('readingTime').textContent = '0m';
+            document.getElementById('readabilityScore').textContent = '—';
+            document.getElementById('gradeLevel').textContent = '—';
+            document.getElementById('detectedLanguage').textContent = 'EN';
+            updateSocialLimits(0);
+            document.getElementById('keywordsList').innerHTML = '<span class="keyword-tag">NONE</span>';
+        }
+
+        function calculateAvgSyllables(words) {
+            return words.reduce((total, word) => total + countSyllables(word), 0) / Math.max(words.length, 1);
+        }
+
+        function countSyllables(word) {
+            word = word.toLowerCase();
+            if (word.length <= 3) return 1;
+            word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '').replace(/^y/, '');
+            const matches = word.match(/[aeiouy]{1,2}/g);
+            return matches ? matches.length : 1;
+        }
+
+        function getGradeLevel(score) {
+            if (score >= 90) return 'G5';
+            if (score >= 80) return 'G6';
+            if (score >= 70) return 'G7';
+            if (score >= 60) return 'G8-9';
+            if (score >= 50) return 'G10-12';
+            if (score >= 30) return 'College';
+            return 'Grad';
+        }
+
+        function detectLanguage(text) {
+            const commonEnglish = ['the', 'and', 'to', 'of', 'a', 'in', 'for', 'is', 'on', 'that'];
+            const commonSpanish = ['el', 'la', 'de', 'que', 'y', 'a', 'en', 'un', 'es', 'se'];
+            const commonFrench = ['le', 'de', 'et', 'à', 'un', 'il', 'être', 'en', 'avoir', 'que'];
+            
+            const words = text.toLowerCase().split(/\s+/).filter(word => word.length > 2);
+            let englishCount = 0, spanishCount = 0, frenchCount = 0;
+            
+            words.forEach(word => {
+                if (commonEnglish.includes(word)) englishCount++;
+                if (commonSpanish.includes(word)) spanishCount++;
+                if (commonFrench.includes(word)) frenchCount++;
+            });
+            
+            if (spanishCount > englishCount && spanishCount > frenchCount) return 'ES';
+            if (frenchCount > englishCount && frenchCount > spanishCount) return 'FR';
+            return 'EN';
+        }
+
+        function updateSocialLimits(charCount) {
+            const limits = {twitter: 280, linkedin: 3000, instagram: 2200};
+            
+            Object.keys(limits).forEach(platform => {
+                const limit = limits[platform];
+                const percentage = Math.min((charCount / limit) * 100, 100);
+                const bar = document.getElementById(`${platform}Bar`);
+                const count = document.getElementById(`${platform}Count`);
+                
+                bar.style.width = percentage + '%';
+                bar.className = charCount > limit ? 'social-limit-fill over-limit' : 'social-limit-fill';
+                count.textContent = `${charCount}/${limit}`;
+            });
+        }
+
+        function updateKeywords(words) {
+            const stopWords = ['the', 'and', 'to', 'of', 'a', 'in', 'for', 'is', 'on', 'that', 'by', 'this', 'with', 'i', 'you', 'it', 'not', 'or', 'be', 'are'];
+            const wordCount = {};
+            
+            words.forEach(word => {
+                const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+                if (cleanWord.length > 2 && !stopWords.includes(cleanWord)) {
+                    wordCount[cleanWord] = (wordCount[cleanWord] || 0) + 1;
+                }
+            });
+            
+            const sortedWords = Object.entries(wordCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const keywordsList = document.getElementById('keywordsList');
+            
+            if (sortedWords.length === 0) {
+                keywordsList.innerHTML = '<span class="keyword-tag">NONE</span>';
+            } else {
+                keywordsList.innerHTML = sortedWords.map(([word, count]) => 
+                    `<span class="keyword-tag">${word.toUpperCase()} (${count})</span>`
+                ).join('');
+            }
+        }
+
+        function autoFormat() {
+            const textArea = document.getElementById('textInput');
+            let text = textArea.value;
+            
+            if (!text.trim()) return;
+            
+            // Preserve intentional line breaks but normalize spacing
+            const paragraphs = text.split(/\n\s*\n/);
+            
+            const formattedParagraphs = paragraphs.map(paragraph => {
+                // Normalize whitespace within paragraphs but preserve single line breaks
+                let lines = paragraph.split(/\n/);
+                lines = lines.map(line => {
+                    line = line.replace(/\s+/g, ' ').trim(); // Normalize spaces within lines
+                    
+                    // Fix spacing around punctuation
+                    line = line.replace(/\s+([,.!?;:])/g, '$1'); // Remove space before punctuation
+                    line = line.replace(/([.!?])\s*([A-Z])/g, '$1 $2'); // Ensure space after sentence endings
+                    line = line.replace(/([,:;])\s*/g, '$1 '); // Ensure space after commas, colons, semicolons
+                    
+                    // Capitalize first letter of sentences
+                    line = line.replace(/(^|[.!?]\s+)([a-z])/g, (match, prefix, letter) => 
+                        prefix + letter.toUpperCase()
+                    );
+                    
+                    // Fix common issues
+                    line = line.replace(/\bi\b/g, 'I'); // Capitalize standalone "i"
+                    line = line.replace(/\s+'/g, "'"); // Fix apostrophe spacing
+                    line = line.replace(/'\s+/g, "'"); // Fix apostrophe spacing
+                    line = line.replace(/\s+"/g, '"'); // Fix quote spacing
+                    line = line.replace(/"\s+/g, '"'); // Fix quote spacing
+                    
+                    // Fix multiple punctuation
+                    line = line.replace(/[.]{2,}/g, '...'); // Fix ellipsis
+                    line = line.replace(/[!]{2,}/g, '!'); // Fix multiple exclamation
+                    line = line.replace(/[?]{2,}/g, '?'); // Fix multiple question marks
+                    
+                    return line;
+                }).filter(line => line.length > 0); // Remove empty lines within paragraphs
+                
+                return lines.join('\n');
+            }).filter(p => p.length > 0); // Remove empty paragraphs
+            
+            text = formattedParagraphs.join('\n\n');
+            
+            textArea.value = text;
+            updateStats();
+        }
+
+        function stripFormatting() {
+            const textArea = document.getElementById('textInput');
+            let text = textArea.value;
+            
+            // Remove HTML tags
+            text = text.replace(/<[^>]*>/g, '');
+            
+            // Decode HTML entities
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = text;
+            text = textarea.value;
+            
+            // Normalize whitespace but preserve paragraph structure
+            text = text.replace(/[ \t]+/g, ' '); // Replace multiple spaces/tabs with single space
+            text = text.replace(/\n\s*\n\s*/g, '\n\n'); // Normalize paragraph breaks
+            text = text.replace(/^\s+|\s+$/g, ''); // Trim start and end
+            
+            textArea.value = text;
+            updateStats();
+        }
+
+        function convertCase(caseType) {
+            const textArea = document.getElementById('textInput');
+            let text = textArea.value;
+            
+            if (!text) return;
+            
+            switch(caseType) {
+                case 'upper': text = text.toUpperCase(); break;
+                case 'lower': text = text.toLowerCase(); break;
+                case 'title': text = text.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()); break;
+                case 'sentence': text = text.toLowerCase().replace(/(^|\. *)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase()); break;
+                case 'camel': text = text.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => index === 0 ? word.toLowerCase() : word.toUpperCase()).replace(/\s+/g, ''); break;
+                case 'pascal': text = text.replace(/(?:^\w|[A-Z]|\b\w)/g, word => word.toUpperCase()).replace(/\s+/g, ''); break;
+                case 'snake': text = text.toLowerCase().replace(/\s+/g, '_'); break;
+                case 'kebab': text = text.toLowerCase().replace(/\s+/g, '-'); break;
+            }
+            
+            textArea.value = text;
+            updateStats();
+        }
+
+        const loremLibrary = {
+            latin: ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate', 'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint', 'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia', 'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum'],
+            english: ['the', 'quick', 'brown', 'fox', 'jumps', 'over', 'lazy', 'dog', 'beautiful', 'landscape', 'mountain', 'river', 'forest', 'sunshine', 'peaceful', 'journey', 'adventure', 'discover', 'explore', 'amazing', 'wonderful', 'incredible', 'fantastic', 'brilliant', 'excellent', 'outstanding', 'remarkable', 'stunning', 'breathtaking', 'magnificent', 'spectacular', 'extraordinary', 'impressive', 'delightful', 'charming', 'elegant', 'graceful', 'vibrant', 'dynamic'],
+            tech: ['algorithm', 'database', 'framework', 'application', 'interface', 'protocol', 'architecture', 'deployment', 'optimization', 'authentication', 'encryption', 'scalability', 'performance', 'infrastructure', 'cloud', 'microservices', 'container', 'kubernetes', 'docker', 'api', 'endpoint', 'middleware', 'backend', 'frontend', 'fullstack', 'responsive', 'progressive', 'machine', 'learning', 'artificial', 'intelligence', 'neural', 'network', 'blockchain', 'cybersecurity', 'devops', 'continuous', 'integration', 'deployment'],
+            business: ['strategy', 'growth', 'innovation', 'market', 'customer', 'revenue', 'profit', 'investment', 'portfolio', 'stakeholder', 'partnership', 'collaboration', 'synergy', 'efficiency', 'productivity', 'optimization', 'transformation', 'digital', 'disruption', 'competitive', 'advantage', 'value', 'proposition', 'brand', 'marketing', 'sales', 'analytics', 'metrics', 'performance', 'roi', 'kpi', 'milestone', 'deliverable', 'timeline', 'budget', 'resource', 'allocation', 'management', 'leadership', 'vision', 'mission']
+        };
+
+        function generateLorem() {
+            const type = document.getElementById('loremType').value;
+            const count = parseInt(document.getElementById('loremCount').value);
+            const style = document.getElementById('loremStyle').value;
+            const output = document.getElementById('loremOutput');
+            const words = loremLibrary[style];
+            
+            let result = '';
+            switch(type) {
+                case 'words': result = generateWords(count, words); break;
+                case 'sentences': result = generateSentences(count, words); break;
+                case 'paragraphs': default: result = generateParagraphs(count, words); break;
+            }
+            
+            output.value = result;
+        }
+
+        function generateWords(count, wordArray) {
+            const words = [];
+            for (let i = 0; i < count; i++) {
+                words.push(wordArray[Math.floor(Math.random() * wordArray.length)]);
+            }
+            return words.join(' ') + '.';
+        }
+
+        function generateSentences(count, wordArray) {
+            const sentences = [];
+            for (let i = 0; i < count; i++) {
+                const wordCount = Math.floor(Math.random() * 15) + 5;
+                const words = [];
+                for (let j = 0; j < wordCount; j++) {
+                    words.push(wordArray[Math.floor(Math.random() * wordArray.length)]);
+                }
+                words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+                sentences.push(words.join(' ') + '.');
+            }
+            return sentences.join(' ');
+        }
+
+        function generateParagraphs(count, wordArray) {
+            const paragraphs = [];
+            for (let i = 0; i < count; i++) {
+                const sentenceCount = Math.floor(Math.random() * 5) + 3;
+                const sentences = generateSentences(sentenceCount, wordArray);
+                paragraphs.push(sentences);
+            }
+            return paragraphs.join('\n\n');
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            element.setSelectionRange(0, 99999);
+            
+            try {
+                document.execCommand('copy') || navigator.clipboard.writeText(element.value);
+                showCopyFeedback();
+            } catch (err) {
+                navigator.clipboard.writeText(element.value).then(showCopyFeedback).catch(() => 
+                    alert('Copy failed. Please select and copy manually.')
+                );
+            }
+        }
+
+        function clearText(elementId) {
+            document.getElementById(elementId).value = '';
+            if (elementId === 'textInput') updateStats();
+        }
+
+        function showCopyFeedback() {
+            const feedback = document.getElementById('copyFeedback');
+            feedback.classList.add('show');
+            setTimeout(() => feedback.classList.remove('show'), 2000);
+        }
+
+        // Auto-strip formatting on paste and auto-format
+        document.getElementById('textInput').addEventListener('paste', () => {
+            setTimeout(() => {
+                stripFormatting();
+                autoFormat();
+                updateStats();
+            }, 50);
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            // Set current year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            generateLorem();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
