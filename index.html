@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEXTY - Modern Text Processor</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="brand">TEXTY</h1>
+                <p class="tagline">Format • Generate • Analyze</p>
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <div class="grid">
+                <!-- Text Processor Card -->
+                <div class="card primary-card">
+                    <div class="card-header">
+                        <div class="card-icon">✂️</div>
+                        <div class="card-title-group">
+                            <h2 class="card-title">Text Processor</h2>
+                            <p class="card-subtitle">Clean, format, and transform your text instantly</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <textarea 
+                            id="textInput" 
+                            class="text-area primary-textarea" 
+                            placeholder="Paste your text here to get started..."
+                            rows="12">
+                        </textarea>
+                        
+                        <div class="button-group">
+                            <button class="btn btn-primary" id="stripFormatBtn">
+                                Strip Formatting
+                            </button>
+                            <button class="btn btn-secondary" id="autoFormatBtn">
+                                Auto Format
+                            </button>
+                            <button class="btn btn-outline" id="copyBtn">
+                                Copy Text
+                            </button>
+                            <button class="btn btn-outline" id="clearBtn">
+                                Clear
+                            </button>
+                        </div>
+
+                        <!-- Case Converter Section -->
+                        <div class="case-converter">
+                            <h3 class="section-title">Case Converter</h3>
+                            <div class="case-grid">
+                                <button class="btn btn-case" data-case="upper">UPPER</button>
+                                <button class="btn btn-case" data-case="lower">lower</button>
+                                <button class="btn btn-case" data-case="title">Title</button>
+                                <button class="btn btn-case" data-case="sentence">Sentence</button>
+                                <button class="btn btn-case" data-case="camel">camelCase</button>
+                                <button class="btn btn-case" data-case="pascal">PascalCase</button>
+                                <button class="btn btn-case" data-case="snake">snake_case</button>
+                                <button class="btn btn-case" data-case="kebab">kebab-case</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Panel -->
+                <div class="card stats-card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <div class="card-title-group">
+                            <h2 class="card-title">Live Analysis</h2>
+                            <p class="card-subtitle">Real-time text statistics</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="stats-grid">
+                            <div class="stat-item highlight">
+                                <div class="stat-value" id="wordCount">0</div>
+                                <div class="stat-label">Words</div>
+                            </div>
+                            <div class="stat-item highlight">
+                                <div class="stat-value" id="charCount">0</div>
+                                <div class="stat-label">Characters</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="charCountNoSpaces">0</div>
+                                <div class="stat-label">No Spaces</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="sentenceCount">0</div>
+                                <div class="stat-label">Sentences</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="paragraphCount">0</div>
+                                <div class="stat-label">Paragraphs</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="readingTime">0m</div>
+                                <div class="stat-label">Read Time</div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Stats -->
+                        <div class="advanced-stats">
+                            <div class="stat-row">
+                                <span class="stat-label">Readability Score</span>
+                                <span class="stat-value" id="readabilityScore">—</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Grade Level</span>
+                                <span class="stat-value" id="gradeLevel">—</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Avg Words/Sentence</span>
+                                <span class="stat-value" id="avgWordsPerSentence">0</span>
+                            </div>
+                            <div class="stat-row">
+                                <span class="stat-label">Language</span>
+                                <span class="stat-value" id="detectedLanguage">EN</span>
+                            </div>
+                        </div>
+
+                        <!-- Social Media Limits -->
+                        <div class="social-limits">
+                            <h3 class="section-title">Social Media Limits</h3>
+                            <div class="social-item">
+                                <div class="social-header">
+                                    <span class="social-name">Twitter</span>
+                                    <span class="social-count" id="twitterCount">0/280</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="twitterBar"></div>
+                                </div>
+                            </div>
+                            <div class="social-item">
+                                <div class="social-header">
+                                    <span class="social-name">LinkedIn</span>
+                                    <span class="social-count" id="linkedinCount">0/3000</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="linkedinBar"></div>
+                                </div>
+                            </div>
+                            <div class="social-item">
+                                <div class="social-header">
+                                    <span class="social-name">Instagram</span>
+                                    <span class="social-count" id="instagramCount">0/2200</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="instagramBar"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Keywords -->
+                        <div class="keywords-section">
+                            <h3 class="section-title">Top Keywords</h3>
+                            <div class="keywords-list" id="keywordsList">
+                                <span class="keyword-tag">None yet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lorem Generator Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <div class="card-title-group">
+                            <h2 class="card-title">Lorem Generator</h2>
+                            <p class="card-subtitle">Generate placeholder text in multiple styles</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <div class="form-group">
+                            <div class="form-row">
+                                <div class="form-field">
+                                    <label for="loremType" class="form-label">Type</label>
+                                    <select id="loremType" class="form-select">
+                                        <option value="paragraphs">Paragraphs</option>
+                                        <option value="sentences">Sentences</option>
+                                        <option value="words">Words</option>
+                                    </select>
+                                </div>
+                                <div class="form-field">
+                                    <label for="loremCount" class="form-label">Count</label>
+                                    <input type="number" id="loremCount" class="form-input" value="3" min="1" max="50">
+                                </div>
+                                <div class="form-field">
+                                    <label for="loremStyle" class="form-label">Style</label>
+                                    <select id="loremStyle" class="form-select">
+                                        <option value="latin">Latin</option>
+                                        <option value="english" selected>English</option>
+                                        <option value="tech">Tech</option>
+                                        <option value="business">Business</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <textarea 
+                            id="loremOutput" 
+                            class="text-area" 
+                            placeholder="Generated text will appear here..."
+                            rows="8"
+                            readonly>
+                        </textarea>
+                        
+                        <div class="button-group">
+                            <button class="btn btn-primary" id="generateBtn">
+                                Generate Lorem
+                            </button>
+                            <button class="btn btn-outline" id="copyLoremBtn">
+                                Copy
+                            </button>
+                            <button class="btn btn-outline" id="clearLoremBtn">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                Built with ❤️ by <a href="https://www.dee7studio.com" target="_blank" class="footer-link">Dee7 Studio</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-message">Text copied to clipboard!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/text-processor.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
