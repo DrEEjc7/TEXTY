@@ -21,6 +21,7 @@ class TextyApp {
         this.bindEvents();
         this.initializeTheme();
         this.generateInitialLorem();
+        this.setCurrentYear();
         
         // Add entrance animation
         document.body.style.opacity = '0';
@@ -365,9 +366,24 @@ class TextyApp {
         // Update theme toggle button
         if (this.elements.themeToggle) {
             const icon = this.elements.themeToggle.querySelector('.theme-icon');
-            if (icon) {
-                icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            const text = this.elements.themeToggle.querySelector('span:last-child');
+            if (icon && text) {
+                if (theme === 'dark') {
+                    icon.textContent = '☀️';
+                    text.textContent = 'Light';
+                } else {
+                    icon.textContent = '🌙';
+                    text.textContent = 'Dark';
+                }
             }
+        }
+    }
+
+    // === UTILITY METHODS ===
+    setCurrentYear() {
+        const yearElement = document.getElementById('currentYear');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
         }
     }
 
