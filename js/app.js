@@ -480,6 +480,12 @@ class TextyApp {
 // === APPLICATION STARTUP ===
 document.addEventListener('DOMContentLoaded', () => {
     try {
+        // Set current year immediately
+        const yearElement = document.getElementById('currentYear');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+        
         window.textyApp = new TextyApp();
         
         // Add global error handler
