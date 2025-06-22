@@ -94,27 +94,63 @@ class TextAnalyzer {
     }
 
     static detectLanguage(text) {
-        const commonEnglish = ['the', 'and', 'to', 'of', 'a', 'in', 'for', 'is', 'on', 'that'];
-        const commonSpanish = ['el', 'la', 'de', 'que', 'y', 'a', 'en', 'un', 'es', 'se'];
-        const commonFrench = ['le', 'de', 'et', 'à', 'un', 'il', 'être', 'en', 'avoir', 'que'];
-        const commonGerman = ['der', 'die', 'und', 'zu', 'den', 'das', 'nicht', 'von', 'sie', 'ist'];
+        const languagePatterns = {
+            english: ['the', 'and', 'to', 'of', 'a', 'in', 'for', 'is', 'on', 'that', 'with', 'as'],
+            spanish: ['el', 'la', 'de', 'que', 'y', 'a', 'en', 'un', 'es', 'se', 'del', 'las'],
+            french: ['le', 'de', 'et', 'à', 'un', 'il', 'être', 'en', 'avoir', 'que', 'du', 'les'],
+            german: ['der', 'die', 'und', 'zu', 'den', 'das', 'nicht', 'von', 'sie', 'ist', 'mit', 'für'],
+            italian: ['il', 'di', 'che', 'e', 'la', 'per', 'un', 'in', 'è', 'con', 'da', 'del'],
+            portuguese: ['o', 'de', 'a', 'e', 'do', 'da', 'em', 'um', 'para', 'com', 'não', 'uma'],
+            dutch: ['de', 'van', 'het', 'een', 'en', 'in', 'te', 'dat', 'op', 'voor', 'met', 'aan'],
+            russian: ['и', 'в', 'не', 'на', 'я', 'быть', 'он', 'с', 'что', 'а', 'по', 'это'],
+            chinese: ['的', '是', '了', '在', '我', '有', '和', '就', '不', '人', '都', '一'],
+            japanese: ['の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ'],
+            korean: ['이', '의', '가', '을', '는', '에', '와', '로', '으로', '에서', '도', '만'],
+            arabic: ['في', 'من', 'إلى', 'على', 'أن', 'هذا', 'هذه', 'التي', 'الذي', 'كان', 'أم', 'لا']
+        };
         
-        const words = text.toLowerCase().split(/\s+/).filter(word => word.length > 2);
-        let englishCount = 0, spanishCount = 0, frenchCount = 0, germanCount = 0;
+        const words = text.toLowerCase().split(/\s+/).filter(word => word.length > 1);
+        const languageScores = {};
         
-        words.forEach(word => {
-            if (commonEnglish.includes(word)) englishCount++;
-            if (commonSpanish.includes(word)) spanishCount++;
-            if (commonFrench.includes(word)) frenchCount++;
-            if (commonGerman.includes(word)) germanCount++;
+        // Initialize scores
+        Object.keys(languagePatterns).forEach(lang => {
+            languageScores[lang] = 0;
         });
         
-        const max = Math.max(englishCount, spanishCount, frenchCount, germanCount);
-        if (max === 0) return 'EN';
-        if (max === spanishCount) return 'ES';
-        if (max === frenchCount) return 'FR';
-        if (max === germanCount) return 'DE';
-        return 'EN';
+        // Count matches for each language
+        words.forEach(word => {
+            Object.keys(languagePatterns).forEach(lang => {
+                if (languagePatterns[lang].includes(word)) {
+                    languageScores[lang]++;
+                }
+            });
+        });
+        
+        // Find the language with the highest score
+        let maxScore = 0;
+        let detectedLang = 'EN';
+        
+        Object.keys(languageScores).forEach(lang => {
+            if (languageScores[lang] > maxScore) {
+                maxScore = languageScores[lang];
+                switch(lang) {
+                    case 'english': detectedLang = 'EN'; break;
+                    case 'spanish': detectedLang = 'ES'; break;
+                    case 'french': detectedLang = 'FR'; break;
+                    case 'german': detectedLang = 'DE'; break;
+                    case 'italian': detectedLang = 'IT'; break;
+                    case 'portuguese': detectedLang = 'PT'; break;
+                    case 'dutch': detectedLang = 'NL'; break;
+                    case 'russian': detectedLang = 'RU'; break;
+                    case 'chinese': detectedLang = 'ZH'; break;
+                    case 'japanese': detectedLang = 'JA'; break;
+                    case 'korean': detectedLang = 'KO'; break;
+                    case 'arabic': detectedLang = 'AR'; break;
+                }
+            }
+        });
+        
+        return detectedLang;
     }
 
     static extractKeywords(words) {
