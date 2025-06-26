@@ -116,7 +116,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--space-lg);
+    padding: 0 var(--space-md);
 }
 
 .grid {
@@ -184,10 +184,18 @@ body {
 
 /* === MAIN CONTENT === */
 .main {
-    padding: 1rem;
+    padding: var(--space-2xl) 1rem;
 }
 
 /* === CARDS === */
+.primary-card, .stats-card, .lorem-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
 .primary-card {
     grid-column: 1;
 }
@@ -196,6 +204,10 @@ body {
     grid-column: 2;
     position: sticky;
     top: var(--space-xl);
+}
+
+.lorem-card {
+    grid-column: 1 / -1;
 }
 
 .card-header {
@@ -421,44 +433,6 @@ body {
     gap: var(--space-sm);
 }
 
-/* === AI TOOLS === */
-.ai-tools {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-border-light);
-}
-
-.ai-tools-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-sm);
-    margin-bottom: var(--space-lg);
-}
-
-.ai-settings {
-    margin-top: var(--space-lg);
-    padding: var(--space-md);
-    background: var(--color-bg-tertiary);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-light);
-}
-
-.form-help {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
-    margin-top: var(--space-xs);
-    display: block;
-}
-
-.form-help a {
-    color: var(--color-accent);
-    text-decoration: none;
-}
-
-.form-help a:hover {
-    text-decoration: underline;
-}
-
 /* === FOOTER === */
 .footer {
     background: var(--color-bg-card);
@@ -519,32 +493,29 @@ body {
         gap: var(--space-xl);
     }
     
-    .stats-card {
-        grid-column: 1;
-        position: static;
-        order: 2;
+    .primary-card {
+        order: 1;
     }
     
-    .primary-card {
-        grid-column: 1;
-        order: 1;
+    .stats-card {
+        order: 2;
+        position: static;
+    }
+
+    .lorem-card {
+        order: 3;
     }
 }
 
 @media (max-width: 768px) {
-    .container {
-        padding: 0 var(--space-md);
-    }
-    
     .brand {
         font-size: 1.5rem;
     }
     
     .header-content {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
         text-align: left;
-        gap: var(--space-md);
     }
     
     .brand-section {
@@ -553,9 +524,8 @@ body {
     
     .card-header {
         padding: var(--space-lg);
-        flex-direction: column;
+        flex-direction: row;
         text-align: left;
-        gap: var(--space-md);
     }
     
     .card-content {
@@ -564,7 +534,7 @@ body {
     }
     
     .stats-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
     }
     
     .case-grid {
@@ -578,10 +548,23 @@ body {
     }
     
     .main {
-        padding: var(--space-xl) 0;
+        padding: var(--space-xl) 1rem;
     }
     
     .brand {
         font-size: 1.25rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .case-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Prevent mobile zoom on focus */
+    .text-area, .form-input, .form-select {
+        font-size: 1rem; /* 16px */
     }
 }
