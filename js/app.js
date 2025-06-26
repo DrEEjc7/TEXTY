@@ -20,7 +20,6 @@ class TextyApp {
         this.cacheElements();
         this.bindEvents();
         this.initializeTheme();
-        this.generateInitialLorem();
         this.setCurrentYear();
         
         // Add entrance animation
@@ -167,7 +166,6 @@ class TextyApp {
     updateSocialLimits(text) {
         const limits = SocialLimits.check(text);
         
-        // Update Twitter
         this.updateSocialLimit('twitter', limits.twitter);
         this.updateSocialLimit('linkedin', limits.linkedin);
         this.updateSocialLimit('instagram', limits.instagram);
@@ -205,7 +203,6 @@ class TextyApp {
     updateElement(id, value) {
         const element = this.elements[id];
         if (element) {
-            // Add animation for value changes
             if (element.textContent !== value.toString()) {
                 element.style.transform = 'scale(1.1)';
                 element.textContent = value;
@@ -282,12 +279,6 @@ class TextyApp {
         }, 200);
     }
 
-    generateInitialLorem() {
-        if (this.elements.loremOutput && !this.elements.loremOutput.value) {
-            this.generateLorem();
-        }
-    }
-
     // === UTILITY FUNCTIONS ===
     async copyText(elementId) {
         const element = this.elements[elementId];
@@ -338,7 +329,6 @@ class TextyApp {
             messageElement.textContent = message;
         }
         
-        // Update toast styling based on type
         toast.className = `toast ${type}`;
         toast.classList.add('show');
         
@@ -358,12 +348,12 @@ class TextyApp {
         this.setTheme(newTheme);
     }
 
+
     setTheme(theme) {
         this.state.theme = theme;
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('texty-theme', theme);
         
-        // Update theme toggle button
         if (this.elements.themeToggle) {
             const icon = this.elements.themeToggle.querySelector('.theme-icon');
             const text = this.elements.themeToggle.querySelector('span:last-child');
@@ -389,7 +379,6 @@ class TextyApp {
 
     // === KEYBOARD SHORTCUTS ===
     handleKeyboardShortcuts(e) {
-        // Ctrl/Cmd + shortcuts
         if (e.ctrlKey || e.metaKey) {
             switch(e.key) {
                 case 'k':
@@ -415,7 +404,6 @@ class TextyApp {
             }
         }
         
-        // Escape key
         if (e.key === 'Escape') {
             if (this.elements.toast?.classList.contains('show')) {
                 this.elements.toast.classList.remove('show');
@@ -447,7 +435,6 @@ class TextyApp {
             
             const state = JSON.parse(savedState);
             
-            // Restore form values
             if (this.elements.textInput && state.textInput) {
                 this.elements.textInput.value = state.textInput;
                 this.updateAnalysis();
@@ -469,72 +456,13 @@ class TextyApp {
             console.warn('Failed to restore state:', err);
         }
     }
-
-    // === ERROR HANDLING ===
-    handleError(error, context = 'Unknown') {
-        console.error(`Error in ${context}:`, error);
-        this.showToast('Something went wrong. Please try again.', 'error');
-    }
 }
 
 // === APPLICATION STARTUP ===
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        // Set current year immediately
-        const yearElement = document.getElementById('currentYear');
-        if (yearElement) {
-            yearElement.textContent = new Date().getFullYear();
-        }
-        
         window.textyApp = new TextyApp();
-        
-        // Add global error handler
-        window.addEventListener('error', (e) => {
-            console.error('Global error:', e.error);
-        });
-        
-        // Add unhandled promise rejection handler
-        window.addEventListener('unhandledrejection', (e) => {
-            console.error('Unhandled promise rejection:', e.reason);
-            e.preventDefault();
-        });
-        
     } catch (error) {
         console.error('Failed to initialize TEXTY:', error);
-        document.body.innerHTML = `
-            <div style="text-align: center; padding: 2rem; font-family: system-ui;">
-                <h1>TEXTY - Error</h1>
-                <p>Failed to initialize the application. Please refresh the page.</p>
-                <button onclick="window.location.reload()" style="margin-top: 1rem; padding: 0.5rem 1rem;">
-                    Refresh Page
-                </button>
-            </div>
-        `;
     }
 });
-
-// === KEYBOARD SHORTCUTS HELP ===
-document.addEventListener('keydown', (e) => {
-    if (e.key === '?' && e.shiftKey) {
-        e.preventDefault();
-        alert(`TEXTY Keyboard Shortcuts:
-        
-Ctrl/Cmd + K - Clear text
-Ctrl/Cmd + F - Auto format
-Ctrl/Cmd + S - Strip formatting  
-Ctrl/Cmd + G - Generate lorem
-Ctrl/Cmd + D - Toggle theme
-Shift + ? - Show this help
-Escape - Close notifications`);
-    }
-});
-
-// === SERVICE WORKER (Optional) ===
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        // Uncomment to enable offline functionality
-        // navigator.serviceWorker.register('/sw.js')
-        //     .then(registration => console.log('SW registered'))
-        //     .catch(error => console.log('SW registration failed'));
-    });
-}
