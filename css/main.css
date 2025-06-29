@@ -116,7 +116,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--space-md); /* XS padding on sides */
+    padding: 0 var(--space-xs); /* XS padding on sides */
 }
 
 .grid {
@@ -146,23 +146,30 @@ body {
 
 /* === HEADER === */
 .header {
+    background: transparent;
+    padding: var(--space-xs) 0;
+}
+
+.header-card {
     background: var(--color-bg-card);
-    border-bottom: 1px solid var(--color-border);
-    padding: var(--space-lg) 0;
-    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
 }
 
 .header-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    position: relative;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
 }
 
 .brand-section {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 2px;
 }
 
 .brand {
@@ -170,14 +177,16 @@ body {
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--color-text-primary);
-    margin-bottom: 2px;
+    line-height: 1;
+    margin: 0;
 }
 
 .tagline {
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-text-secondary);
-    margin-bottom: var(--space-md);
+    margin: 0;
+    line-height: 1.2;
 }
 
 .theme-toggle {
@@ -193,11 +202,14 @@ body {
     display: flex;
     align-items: center;
     gap: var(--space-xs);
+    flex-shrink: 0;
 }
 
 .theme-toggle:hover {
     background: var(--color-bg-primary);
     border-color: var(--color-text-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
 }
 
 /* === MAIN CONTENT === */
@@ -546,19 +558,22 @@ body {
 }
 
 @media (max-width: 768px) {
-    .brand {
-        font-size: 1.5rem;
-    }
-    
     .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
+        padding: var(--space-md);
         gap: var(--space-md);
     }
     
-    .brand-section {
-        align-items: flex-start;
+    .brand {
+        font-size: 1.25rem;
+    }
+    
+    .tagline {
+        font-size: 0.8rem;
+    }
+    
+    .theme-toggle {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.8rem;
     }
     
     .card-header {
