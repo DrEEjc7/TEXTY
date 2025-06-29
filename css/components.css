@@ -20,7 +20,7 @@
 
 .text-area:focus {
     border-color: var(--color-border-focus);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: none;
 }
 
 .text-area::placeholder {
@@ -238,13 +238,6 @@
 
 /* === FOCUS MANAGEMENT === */
 .btn:focus-visible {
-    outline: 2px solid var(--color-border-focus);
-    outline-offset: 2px;
-}
-
-.text-area:focus-visible,
-.form-select:focus-visible,
-.form-input:focus-visible {
     outline: 2px solid var(--color-border-focus);
     outline-offset: 2px;
 }
