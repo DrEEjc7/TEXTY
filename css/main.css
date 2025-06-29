@@ -195,7 +195,7 @@ body {
 
 @media (max-width: 1024px) {
     .main {
-        padding: var(--space-md); /* 1rem on iPad and smaller */
+        padding: 0rem; /* 1rem on iPad and smaller */
     }
 }
 
