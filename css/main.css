@@ -116,7 +116,7 @@ body {
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--space-xs); /* XS padding on sides */
+    padding: 0 var(--space-md); /* XS padding on sides */
 }
 
 .grid {
@@ -177,7 +177,7 @@ body {
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-text-secondary);
-    margin-bottom: 0;
+    margin-bottom: var(--space-md);
 }
 
 .theme-toggle {
