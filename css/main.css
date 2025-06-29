@@ -119,6 +119,12 @@ body {
     padding: 0 var(--space-lg);
 }
 
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 var(--space-md); /* This will be 1rem */
+    }
+}
+
 .grid {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -184,7 +190,13 @@ body {
 
 /* === MAIN CONTENT === */
 .main {
-    padding: 1rem;
+    padding: var(--space-lg);
+}
+
+@media (max-width: 1024px) {
+    .main {
+        padding: var(--space-md); /* 1rem on iPad and smaller */
+    }
 }
 
 /* === CARDS === */
