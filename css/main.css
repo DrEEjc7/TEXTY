@@ -121,14 +121,14 @@ body {
 
 @media (max-width: 1024px) {
     .container {
-        padding: 0 var(--space-md); /* This will be 1rem */
+        padding: var(--space-xs); /* This will be 1rem */
     }
 }
 
 .grid {
     display: grid;
     grid-template-columns: 1fr 320px;
-    gap: var(--space-2xl);
+    gap: var(--space-md);
     align-items: start;
 }
 
@@ -195,7 +195,7 @@ body {
 
 @media (max-width: 1024px) {
     .main {
-        padding: 0rem; /* 1rem on iPad and smaller */
+        padding: var(--space-xs); /* 1rem on iPad and smaller */
     }
 }
 
@@ -207,15 +207,15 @@ body {
 .stats-card {
     grid-column: 2;
     position: sticky;
-    top: var(--space-xl);
+    top: var(--space-xs);
 }
 
 .card-header {
-    padding: var(--space-xl);
+    padding: var(--space-xs);
     border-bottom: 1px solid var(--color-border-light);
     display: flex;
     align-items: flex-start;
-    gap: var(--space-md);
+    gap: var(--space-xs);
 }
 
 .card-icon {
@@ -250,7 +250,7 @@ body {
 }
 
 .card-content {
-    padding: var(--space-xl);
+    padding: var(--space-xs);
 }
 
 /* === TYPOGRAPHY === */
@@ -275,8 +275,8 @@ body {
 .stat-item {
     background: var(--color-bg-tertiary);
     border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
+    border-radius: var(--radius-xs);
+    padding: var(--space-xs);
     text-align: center;
     transition: all var(--transition-fast);
 }
@@ -564,14 +564,14 @@ body {
     }
     
     .card-header {
-        padding: var(--space-lg);
+        padding: var(--space-xs);
         flex-direction: column;
         text-align: left;
         gap: var(--space-md);
     }
     
     .card-content {
-        padding: var(--space-lg);
+        padding: var(--space-xs);
         padding-top: 0;
     }
     
@@ -586,11 +586,11 @@ body {
 
 @media (max-width: 480px) {
     .header {
-        padding: var(--space-md) 0;
+        padding: var(--space-xs) 0;
     }
     
     .main {
-        padding: var(--space-xl) 0;
+        padding: var(--space-xs) 0;
     }
     
     .brand {
